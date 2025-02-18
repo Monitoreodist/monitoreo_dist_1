@@ -46,11 +46,18 @@ def enviar_email(mensaje):
 
 def obtener_links_importantes(url):
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Referer": "https://www.google.com/",
+        "Accept-Language": "es-ES,es;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
     }
 
+    session = requests.Session()
+    session.headers.update(headers)
+
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        response = session.get(url, timeout=15)
         if response.status_code != 200:
             print(f"⚠️ Error {response.status_code} al acceder a {url}")
             return None
@@ -62,6 +69,7 @@ def obtener_links_importantes(url):
     except requests.exceptions.RequestException as e:
         print(f"⚠️ No se pudo acceder a {url}: {e}")
         return None
+
 
 
 
