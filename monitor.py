@@ -5,6 +5,8 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import difflib
+
 
 # Lista de URLs a monitorear
 URLS = {
@@ -32,16 +34,15 @@ def enviar_email(mensaje):
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
-    msg["Subject"] = "🔔 Cambio detectado en una web"
+    msg["Subject"] = "🔔 Cambios detectados en las webs monitoreadas"
 
-    # Convertimos el mensaje a UTF-8
+    # Agregar el mensaje en texto plano y HTML para mejor visualización
     msg.attach(MIMEText(mensaje, "plain", "utf-8"))
+    msg.attach(MIMEText(f"<html><body><pre>{mensaje}</pre></body></html>", "html", "utf-8"))
 
-    # Enviar el correo
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
         server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
-
 
 
 def obtener_links_importantes(url):
@@ -73,9 +74,19 @@ def obtener_links_importantes(url):
 
 
 
-# Revisar cambios en las webs
+import difflib
+
+def obtener_diferencias(viejo_contenido, nuevo_contenido):
+    viejo_lineas = viejo_contenido.split("\n")
+    nuevo_lineas = nuevo_contenido.split("\n")
+    
+    # Comparar línea por línea y destacar los cambios
+    diff = list(difflib.unified_diff(viejo_lineas, nuevo_lineas, lineterm=""))
+    return "\n".join(diff) if diff else "No hay cambios detectados."
+
 def revisar_cambios():
     cambios = []
+    detalles_cambios = []
     
     for nombre, url in URLS.items():
         nuevo_contenido = obtener_links_importantes(url)
@@ -86,7 +97,7 @@ def revisar_cambios():
         filename = f"{nombre.replace(' ', '_')}.txt"
         
         try:
-            with open(filename, "r") as f:
+            with open(filename, "r", encoding="utf-8") as f:
                 viejo_contenido = f.read()
         except FileNotFoundError:
             viejo_contenido = ""
@@ -94,14 +105,21 @@ def revisar_cambios():
         if nuevo_contenido != viejo_contenido:
             print(f"🔔 ¡Cambio detectado en {nombre}!")
             cambios.append(f"- {nombre}: {url}")
-            with open(filename, "w") as f:
+
+            # Obtener diferencias exactas
+            diferencias = obtener_diferencias(viejo_contenido, nuevo_contenido)
+            detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
+
+            with open(filename, "w", encoding="utf-8") as f:
                 f.write(nuevo_contenido)
 
     if cambios:
-        mensaje = "Se han detectado cambios en las siguientes páginas:\n\n" + "\n".join(cambios)
+        mensaje = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(detalles_cambios)
         enviar_email(mensaje)
     else:
         print("✅ No hay cambios en las páginas.")
+
+
 
 
 
