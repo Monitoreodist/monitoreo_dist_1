@@ -115,6 +115,11 @@ def revisar_cambios():
             with open(filename, "w", encoding="utf-8") as f:
                 f.write(nuevo_contenido)
 
+            # Agregar cambios al repositorio para futuras comparaciones
+            os.system(f"git add {filename}")
+            os.system(f'git commit -m "Actualización de {nombre}"')
+            os.system("git push")
+
     # Enviar notificación solo si hay cambios
     if cambios:
         mensaje = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(detalles_cambios)
