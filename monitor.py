@@ -84,7 +84,7 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
     diff = list(difflib.unified_diff(viejo_lineas, nuevo_lineas, lineterm=""))
     return "\n".join(diff) if diff else "No hay cambios detectados."
 
-def ref revisar_cambios():
+def revisar_cambios():
     cambios = []
     detalles_cambios = []
     
