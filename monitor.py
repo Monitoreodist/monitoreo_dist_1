@@ -43,37 +43,46 @@ def enviar_email(mensaje):
 
 
 
+def obtener_links_importantes(url):
+    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Extraemos solo los enlaces a PDFs y Excels
+    links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith(('.pdf', '.xls', '.xlsx'))]
+    
+    return "\n".join(sorted(links))  # Convertimos la lista a un string ordenado para comparar
+
 # Revisar cambios en las webs
 def revisar_cambios():
     cambios = []
     
     for nombre, url in URLS.items():
-        nuevo_html = obtener_html(url)
-        if not nuevo_html:
+        nuevo_contenido = obtener_links_importantes(url)
+        if not nuevo_contenido:
             print(f"⚠️ No se pudo acceder a {nombre}")
             continue
 
-        filename = f"/tmp/{nombre.replace(' ', '_')}.txt"
+        filename = f"{nombre.replace(' ', '_')}.txt"
         
         try:
             with open(filename, "r") as f:
-                viejo_html = f.read()
+                viejo_contenido = f.read()
         except FileNotFoundError:
-            viejo_html = ""
+            viejo_contenido = ""
 
-        # Si el contenido ha cambiado, se notifica
-        if nuevo_html != viejo_html:
+        if nuevo_contenido != viejo_contenido:
             print(f"🔔 ¡Cambio detectado en {nombre}!")
             cambios.append(f"- {nombre}: {url}")
             with open(filename, "w") as f:
-                f.write(nuevo_html)
+                f.write(nuevo_contenido)
 
-    # Si hubo cambios, enviamos el correo
     if cambios:
         mensaje = "Se han detectado cambios en las siguientes páginas:\n\n" + "\n".join(cambios)
         enviar_email(mensaje)
     else:
         print("✅ No hay cambios en las páginas.")
+
+
 
 # Ejecutar la revisión
 if __name__ == "__main__":
