@@ -44,13 +44,25 @@ def enviar_email(mensaje):
 
 
 def obtener_links_importantes(url):
-    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
-    soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # Extraemos solo los enlaces a PDFs y Excels
-    links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith(('.pdf', '.xls', '.xlsx'))]
-    
-    return "\n".join(sorted(links))  # Convertimos la lista a un string ordenado para comparar
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            print(f"⚠️ Error {response.status_code} al acceder a {url}")
+            return None
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith(('.pdf', '.xls', '.xlsx'))]
+
+        return "\n".join(sorted(links))  # Convertimos la lista a un string ordenado para comparar
+    except requests.exceptions.RequestException as e:
+        print(f"⚠️ No se pudo acceder a {url}: {e}")
+        return None
+
+
 
 # Revisar cambios en las webs
 def revisar_cambios():
