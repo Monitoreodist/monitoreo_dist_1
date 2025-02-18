@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import smtplib
 import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Lista de URLs a monitorear
 URLS = {
@@ -22,11 +25,23 @@ def obtener_html(url):
     response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
     return response.text if response.status_code == 200 else None
 
-# Función para enviar correos
+
+
 def enviar_email(mensaje):
+    msg = MIMEMultipart()
+    msg["From"] = EMAIL_SENDER
+    msg["To"] = EMAIL_RECEIVER
+    msg["Subject"] = "🔔 Cambio detectado en una web"
+
+    # Convertimos el mensaje a UTF-8
+    msg.attach(MIMEText(mensaje, "plain", "utf-8"))
+
+    # Enviar el correo
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-        server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, f"Subject: 🔔 Cambio detectado en una web\n\n{mensaje}")
+        server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
+
+
 
 # Revisar cambios en las webs
 def revisar_cambios():
