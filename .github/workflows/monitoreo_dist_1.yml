@@ -1,0 +1,23 @@
+name: Monitoreo de Páginas Web
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"  # Ejecutar cada 5 minutos
+
+jobs:
+  check_updates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Instalar dependencias
+        run: pip install requests beautifulsoup4 smtplib
+
+      - name: Ejecutar el script
+        env:
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+        run: python monitoreo_dist_1.py
+
