@@ -84,7 +84,7 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
     diff = list(difflib.unified_diff(viejo_lineas, nuevo_lineas, lineterm=""))
     return "\n".join(diff) if diff else "No hay cambios detectados."
 
-def revisar_cambios():
+def ref revisar_cambios():
     cambios = []
     detalles_cambios = []
     
@@ -95,13 +95,14 @@ def revisar_cambios():
             continue
 
         filename = f"{nombre.replace(' ', '_')}.txt"
-        
-        try:
+
+        # Cargar el contenido anterior si existe
+        viejo_contenido = ""
+        if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 viejo_contenido = f.read()
-        except FileNotFoundError:
-            viejo_contenido = ""
 
+        # Comparar contenido
         if nuevo_contenido != viejo_contenido:
             print(f"🔔 ¡Cambio detectado en {nombre}!")
             cambios.append(f"- {nombre}: {url}")
@@ -110,9 +111,11 @@ def revisar_cambios():
             diferencias = obtener_diferencias(viejo_contenido, nuevo_contenido)
             detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
 
+            # Guardar la nueva lista de archivos detectados
             with open(filename, "w", encoding="utf-8") as f:
                 f.write(nuevo_contenido)
 
+    # Enviar notificación solo si hay cambios
     if cambios:
         mensaje = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(detalles_cambios)
         enviar_email(mensaje)
