@@ -12,8 +12,9 @@ URLS = {
     "I-DE Iberdrola": "https://www.i-de.es/conexion-red-electrica/produccion-energia/mapa-capacidad-acceso",
     "UFD Unión Fenosa": "https://www.ufd.es/capacidad-de-acceso-de-generacion/",
     "Viesgo Distribución": "https://www.viesgodistribucion.com/soy-cliente/mapa-interactivo-de-la-red",
-    "E-Redes Distribución": "https://www.eredesdistribucion.es/soy-cliente/mapa-interactivo-de-la-red"
+    "E-Redes Distribución": "https://areaprivada.eredesdistribucion.es/blank/interactive-map"  # NUEVA URL
 }
+
 
 # Credenciales para el envío de correos (se configuran en GitHub)
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
