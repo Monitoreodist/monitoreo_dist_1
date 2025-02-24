@@ -47,7 +47,8 @@ def obtener_html(url, intentos=3, espera=5):
     return None
 
 
-# Función para extraer los enlaces a archivos importantes (.pdf, .xls, .xlsx)
+import re
+
 def obtener_links_importantes(url):
     html = obtener_html(url)
     if not html:
@@ -56,18 +57,26 @@ def obtener_links_importantes(url):
 
     soup = BeautifulSoup(html, 'html.parser')
 
-    # 🔍 Imprimir todos los enlaces encontrados antes de filtrarlos
+    # 🔍 Obtener todos los enlaces de la página
     todos_los_links = [a['href'] for a in soup.find_all('a', href=True)]
     print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
-    for enlace in todos_los_links:
-        print(f"🔗 {enlace}")
+    
+    # Expresión regular para capturar archivos .pdf, .xls, .xlsx sin importar los parámetros después
+    patron = re.compile(r'.*\.(pdf|xls|xlsx)(\?.*)?$')
 
-    # Filtrar solo los que terminan en .pdf, .xls o .xlsx
-    links = [link for link in todos_los_links if link.endswith(('.pdf', '.xls', '.xlsx'))]
+    # Filtrar solo los enlaces que coinciden con el patrón
+    links = [link for link in todos_los_links if patron.match(link)]
 
-    if not links:
+    # Mostrar los enlaces filtrados
+    if links:
+        print(f"📂 Archivos detectados en {url}:")
+        for link in links:
+            print(f"🔗 {link}")
+    else:
         print(f"⚠️ No se encontraron archivos .pdf, .xls o .xlsx en {url}.")
+
     return "\n".join(sorted(links)) if links else None
+
 
 
 
