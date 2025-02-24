@@ -54,15 +54,21 @@ def obtener_links_importantes(url):
         print(f"⚠️ No se pudo obtener HTML de {url}")
         return None
 
-    # 🛑 Depuración: Ver el HTML recibido (primeros 2000 caracteres)
-    print(f"\n🔍 HTML obtenido de {url} ({url[:50]}...):\n{'='*50}\n{html[:2000]}\n{'='*50}")
-
     soup = BeautifulSoup(html, 'html.parser')
-    links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith(('.pdf', '.xls', '.xlsx'))]
+
+    # 🔍 Imprimir todos los enlaces encontrados antes de filtrarlos
+    todos_los_links = [a['href'] for a in soup.find_all('a', href=True)]
+    print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
+    for enlace in todos_los_links:
+        print(f"🔗 {enlace}")
+
+    # Filtrar solo los que terminan en .pdf, .xls o .xlsx
+    links = [link for link in todos_los_links if link.endswith(('.pdf', '.xls', '.xlsx'))]
 
     if not links:
-        print(f"⚠️ No se encontraron enlaces en {url}. Puede que la página use JavaScript.")
+        print(f"⚠️ No se encontraron archivos .pdf, .xls o .xlsx en {url}.")
     return "\n".join(sorted(links)) if links else None
+
 
 
 
