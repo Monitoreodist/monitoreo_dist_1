@@ -138,15 +138,9 @@ def enviar_email(mensaje):
         print(f"❌ Error al enviar el correo: {e}")
 
 
+import difflib
+
 def revisar_cambios():
-    print(f"📂 Directorio actual del script: {os.getcwd()}")
-    # Verificar que el archivo .txt realmente existe en cada ejecución
-    for nombre in URLS.keys():
-        filename = f"{nombre.replace(' ', '_')}.txt"
-        if os.path.exists(filename):
-            print(f"✅ {filename} encontrado en la carpeta de ejecución.")
-        else:
-            print(f"⚠️ {filename} NO encontrado en la carpeta actual. Puede ser un problema de entorno.")
     cambios = []
     detalles_cambios = []
 
@@ -158,33 +152,62 @@ def revisar_cambios():
 
         viejo_contenido = cargar_estado(nombre)
 
-        # 🔍 Imprimir contenido anterior y nuevo para depuración
+        # 🔍 Imprimir contenido anterior solo una vez
         print(f"\n📂 **{nombre}** - Comparación de estado")
         print("=" * 40)
-        print(f"📜 **Contenido anterior en {nombre}.txt:**")
-        print(viejo_contenido if viejo_contenido else "❌ No había archivo previo o estaba vacío.")
-        print("\n🆕 **Nuevo contenido extraído de la web:**")
-        print(nuevo_contenido if nuevo_contenido else "❌ No se encontró contenido nuevo.")
-        print("=" * 40)
 
-        if nuevo_contenido != viejo_contenido:
-            print(f"🔔 ¡Cambio detectado en {nombre}!")
-            cambios.append(f"- {nombre}: {url}")
+        if viejo_contenido:
+            print("📜 **Contenido anterior:**")
+            lineas_viejas = viejo_contenido.split("\n")
+            print(f"🔹 {len(lineas_viejas)} enlaces guardados anteriormente.")
+        else:
+            print("📜 **Contenido anterior:** ❌ No había archivo previo o estaba vacío.")
 
-            # Obtener diferencias exactas
-            diferencias = obtener_diferencias(viejo_contenido, nuevo_contenido)
+        if nuevo_contenido:
+            lineas_nuevas = nuevo_contenido.split("\n")
+            print(f"🆕 **Nuevo contenido:** 🔹 {len(lineas_nuevas)} enlaces encontrados en la web.")
+        else:
+            print("🆕 **Nuevo contenido:** ❌ No se encontró contenido nuevo.")
+
+        # Comparar y mostrar solo las novedades
+        diferencias = list(difflib.unified_diff(
+            viejo_contenido.split("\n") if viejo_contenido else [],
+            nuevo_contenido.split("\n") if nuevo_contenido else [],
+            lineterm=""
+        ))
+
+        if diferencias:
             print("\n🔍 **Diferencias detectadas:**")
-            print(diferencias if diferencias else "No hay diferencias significativas.")
+            novedades = [line[1:] for line in diferencias if line.startswith("+")]
+            eliminados = [line[1:] for line in diferencias if line.startswith("-")]
+
+            if novedades:
+                print(f"✅ **Nuevos enlaces encontrados ({len(novedades)}):**")
+                for enlace in novedades:
+                    print(f"➕ {enlace}")
+
+            if eliminados:
+                print(f"❌ **Enlaces eliminados ({len(eliminados)}):**")
+                for enlace in eliminados:
+                    print(f"➖ {enlace}")
+
+            cambios.append(f"- {nombre}: {url}")
             detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
 
             # Guardar la nueva lista de archivos detectados
             guardar_estado(nombre, nuevo_contenido)
+
+        else:
+            print("✅ No hay cambios detectados.")
+
+        print("=" * 40)  # Separador para mayor claridad
 
     if cambios:
         mensaje = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(detalles_cambios)
         enviar_email(mensaje)
     else:
         print("✅ No hay cambios en las páginas.")
+
 
 
 
