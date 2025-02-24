@@ -68,20 +68,23 @@ def guardar_estado(nombre, contenido):
             f.write(contenido)
         
         print(f"✅ Estado guardado correctamente en {filename}")
-        
-        # 📂 Verifica si el archivo existe después de guardarlo
+
+        # 📂 Verificar que el archivo existe después de guardarlo
         if os.path.exists(filename):
             print(f"📂 Archivo {filename} existe después de guardarlo.")
         else:
             print(f"❌ Archivo {filename} NO se encuentra después de guardarlo.")
 
-        # 📄 Imprimir contenido para depuración
-        with open(filename, "r", encoding="utf-8") as f:
-            contenido_guardado = f.read()
-            print(f"📜 Contenido guardado en {filename}:\n{contenido_guardado}")
+        # 🟢 Hacer commit y push de los cambios en GitHub Actions
+        os.system("git config --global user.email 'github-actions@github.com'")
+        os.system("git config --global user.name 'GitHub Actions'")
+        os.system(f"git add {filename}")
+        os.system(f'git commit -m "Actualización de {nombre}" || echo "⚠️ No hay cambios para commitear."')
+        os.system("git push || echo '⚠️ No se pudo hacer push a GitHub'")
 
     except Exception as e:
         print(f"❌ Error al guardar el estado de {nombre}: {e}")
+
 
 
 
