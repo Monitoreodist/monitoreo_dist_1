@@ -62,19 +62,27 @@ def obtener_links_importantes(url):
 # Función para guardar el estado en un archivo TXT
 def guardar_estado(nombre, contenido):
     filename = f"{nombre.replace(' ', '_')}.txt"
+    
     try:
         with open(filename, "w", encoding="utf-8") as f:
             f.write(contenido)
+        
         print(f"✅ Estado guardado correctamente en {filename}")
-        print(f"📄 Contenido guardado en {filename}:\n{contenido}")  # 🔍 Verificar contenido
+        
+        # 📂 Verifica si el archivo existe después de guardarlo
+        if os.path.exists(filename):
+            print(f"📂 Archivo {filename} existe después de guardarlo.")
+        else:
+            print(f"❌ Archivo {filename} NO se encuentra después de guardarlo.")
 
-        # 🔄 Agregar y subir cambios a GitHub
-        os.system(f"git add {filename}")
-        os.system(f'git commit -m "Actualización de {nombre}"')
-        os.system("git push")
+        # 📄 Imprimir contenido para depuración
+        with open(filename, "r", encoding="utf-8") as f:
+            contenido_guardado = f.read()
+            print(f"📜 Contenido guardado en {filename}:\n{contenido_guardado}")
 
     except Exception as e:
         print(f"❌ Error al guardar el estado de {nombre}: {e}")
+
 
 
 
@@ -120,6 +128,7 @@ def enviar_email(mensaje):
 
 
 def revisar_cambios():
+    print(f"📂 Directorio actual del script: {os.getcwd()}")
     cambios = []
     detalles_cambios = []
 
