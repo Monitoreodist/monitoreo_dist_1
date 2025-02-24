@@ -89,14 +89,22 @@ def guardar_estado(nombre, contenido):
 # Función para cargar el estado previo desde un archivo TXT
 def cargar_estado(nombre):
     filename = f"{nombre.replace(' ', '_')}.txt"
+    
     if os.path.exists(filename):
         try:
             with open(filename, "r", encoding="utf-8") as f:
-                return f.read()
+                contenido = f.read().strip()  # Eliminamos espacios vacíos extra
+                print(f"📄 Archivo {filename} leído correctamente. Contenido anterior:")
+                print(contenido if contenido else "⚠️ El archivo estaba vacío.")
+                return contenido
         except Exception as e:
             print(f"❌ Error al leer {filename}: {e}")
             return ""
+    else:
+        print(f"⚠️ El archivo {filename} no existe aún. (Primera ejecución esperada)")
+    
     return ""
+
 
 
 # Función para detectar diferencias entre el contenido anterior y el nuevo
@@ -129,6 +137,13 @@ def enviar_email(mensaje):
 
 def revisar_cambios():
     print(f"📂 Directorio actual del script: {os.getcwd()}")
+    # Verificar que el archivo .txt realmente existe en cada ejecución
+    for nombre in URLS.keys():
+        filename = f"{nombre.replace(' ', '_')}.txt"
+        if os.path.exists(filename):
+            print(f"✅ {filename} encontrado en la carpeta de ejecución.")
+        else:
+            print(f"⚠️ {filename} NO encontrado en la carpeta actual. Puede ser un problema de entorno.")
     cambios = []
     detalles_cambios = []
 
