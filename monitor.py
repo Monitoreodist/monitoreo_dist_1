@@ -51,12 +51,19 @@ def obtener_html(url, intentos=3, espera=5):
 def obtener_links_importantes(url):
     html = obtener_html(url)
     if not html:
+        print(f"⚠️ No se pudo obtener HTML de {url}")
         return None
+
+    # 🛑 Depuración: Ver el HTML recibido (primeros 2000 caracteres)
+    print(f"\n🔍 HTML obtenido de {url} ({url[:50]}...):\n{'='*50}\n{html[:2000]}\n{'='*50}")
 
     soup = BeautifulSoup(html, 'html.parser')
     links = [a['href'] for a in soup.find_all('a', href=True) if a['href'].endswith(('.pdf', '.xls', '.xlsx'))]
 
-    return "\n".join(sorted(links))  # Convertimos la lista a un string ordenado para comparar
+    if not links:
+        print(f"⚠️ No se encontraron enlaces en {url}. Puede que la página use JavaScript.")
+    return "\n".join(sorted(links)) if links else None
+
 
 
 # Función para guardar el estado en un archivo TXT
