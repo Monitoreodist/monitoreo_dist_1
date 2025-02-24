@@ -119,7 +119,6 @@ def enviar_email(mensaje):
         print(f"❌ Error al enviar el correo: {e}")
 
 
-# Función principal para revisar cambios en las páginas monitoreadas
 def revisar_cambios():
     cambios = []
     detalles_cambios = []
@@ -132,13 +131,26 @@ def revisar_cambios():
 
         viejo_contenido = cargar_estado(nombre)
 
+        # 🔍 Imprimir contenido anterior y nuevo para depuración
+        print(f"\n📂 **{nombre}** - Comparación de estado")
+        print("=" * 40)
+        print(f"📜 **Contenido anterior en {nombre}.txt:**")
+        print(viejo_contenido if viejo_contenido else "❌ No había archivo previo o estaba vacío.")
+        print("\n🆕 **Nuevo contenido extraído de la web:**")
+        print(nuevo_contenido if nuevo_contenido else "❌ No se encontró contenido nuevo.")
+        print("=" * 40)
+
         if nuevo_contenido != viejo_contenido:
             print(f"🔔 ¡Cambio detectado en {nombre}!")
             cambios.append(f"- {nombre}: {url}")
 
+            # Obtener diferencias exactas
             diferencias = obtener_diferencias(viejo_contenido, nuevo_contenido)
+            print("\n🔍 **Diferencias detectadas:**")
+            print(diferencias if diferencias else "No hay diferencias significativas.")
             detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
 
+            # Guardar la nueva lista de archivos detectados
             guardar_estado(nombre, nuevo_contenido)
 
     if cambios:
@@ -146,6 +158,7 @@ def revisar_cambios():
         enviar_email(mensaje)
     else:
         print("✅ No hay cambios en las páginas.")
+
 
 
 # Ejecutar la revisión cuando se corre el script
