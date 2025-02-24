@@ -66,8 +66,16 @@ def guardar_estado(nombre, contenido):
         with open(filename, "w", encoding="utf-8") as f:
             f.write(contenido)
         print(f"✅ Estado guardado correctamente en {filename}")
+        print(f"📄 Contenido guardado en {filename}:\n{contenido}")  # 🔍 Verificar contenido
+
+        # 🔄 Agregar y subir cambios a GitHub
+        os.system(f"git add {filename}")
+        os.system(f'git commit -m "Actualización de {nombre}"')
+        os.system("git push")
+
     except Exception as e:
         print(f"❌ Error al guardar el estado de {nombre}: {e}")
+
 
 
 # Función para cargar el estado previo desde un archivo TXT
@@ -132,11 +140,6 @@ def revisar_cambios():
             detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
 
             guardar_estado(nombre, nuevo_contenido)
-
-            # Guardar cambios en GitHub
-            os.system(f"git add {nombre.replace(' ', '_')}.txt")
-            os.system(f'git commit -m "Actualización de {nombre}"')
-            os.system("git push")
 
     if cambios:
         mensaje = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(detalles_cambios)
