@@ -62,20 +62,20 @@ def obtener_links_importantes(url):
     print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
     
     # Expresión regular para capturar archivos .pdf, .xls, .xlsx sin importar los parámetros después
-    patron = re.compile(r'.*\.(pdf|xls|xlsx)($|\?.*)', re.IGNORECASE)
+    patron = re.compile(r'([^\/]+\.pdf(?:\?.*|\/.*)?|[^\/]+\.xls(?:\?.*|\/.*)?|[^\/]+\.xlsx(?:\?.*|\/.*)?)$', re.IGNORECASE)
 
-    # Filtrar solo los enlaces que coinciden con el patrón
-    links = [link for link in todos_los_links if patron.match(link)]
+    # Filtrar solo los enlaces que contienen archivos PDF, XLS o XLSX
+    archivos = [link for link in todos_los_links if patron.search(link)]
 
-    # Mostrar los enlaces filtrados
-    if links:
+    # Mostrar los archivos filtrados
+    if archivos:
         print(f"📂 Archivos detectados en {url}:")
-        for link in links:
-            print(f"🔗 {link}")
+        for archivo in archivos:
+            print(f"🔗 {archivo}")
     else:
         print(f"⚠️ No se encontraron archivos .pdf, .xls o .xlsx en {url}.")
 
-    return "\n".join(sorted(links)) if links else None
+    return "\n".join(sorted(set(archivos))) if archivos else None
 
 
 
