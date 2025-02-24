@@ -3,23 +3,35 @@ name: Monitoreo de Páginas Web
 on:
   schedule:
     - cron: "*/5 * * * *"  # Ejecutar cada 5 minutos
-  workflow_dispatch:  # Habilita la ejecución manual
+  workflow_dispatch:  # Permite ejecución manual
 
 jobs:
   check_updates:
     runs-on: ubuntu-latest
+
     steps:
       - name: Clonar el repositorio
         uses: actions/checkout@v3
 
-      - name: Instalar dependencias
-        run: pip install requests beautifulsoup4
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'  # O la versión que uses
 
-      - name: Ejecutar el script
+      - name: Instalar dependencias
+        run: |
+          pip install requests beautifulsoup4 selenium webdriver-manager
+
+      - name: Instalar Chrome y ChromeDriver
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+          sudo apt install -y chromium-chromedriver
+          echo "✅ Chrome y ChromeDriver instalados"
+
+      - name: Ejecutar el script de monitoreo
         env:
           EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
         run: python monitor.py
-
-
