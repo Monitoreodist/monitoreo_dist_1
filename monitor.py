@@ -62,7 +62,7 @@ def obtener_links_importantes(url):
     print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
     
     # Expresión regular para capturar archivos .pdf, .xls, .xlsx sin importar los parámetros después
-    patron = re.compile(r'.*\.(pdf|xls|xlsx)(\?.*)?$')
+    patron = re.compile(r'.*\.(pdf|xls|xlsx)($|\?.*)', re.IGNORECASE)
 
     # Filtrar solo los enlaces que coinciden con el patrón
     links = [link for link in todos_los_links if patron.match(link)]
