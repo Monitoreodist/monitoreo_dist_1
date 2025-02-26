@@ -48,13 +48,29 @@ def obtener_links_importantes(url, nombre):
     if not html:
         print(f"⚠️ No se pudo obtener HTML de {url}")
         return None
+
     soup = BeautifulSoup(html, 'html.parser')
+
+    # 🔍 Obtener todos los enlaces de la página
     todos_los_links = [a['href'] for a in soup.find_all('a', href=True)]
-    patron = re.compile(r'([^\/]+\.(pdf|xls|xlsx)(?:\?.*|\/.*)?)$', re.IGNORECASE)
+    print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
+    
+    for enlace in todos_los_links:
+        print(f"🔗 {enlace}")  # 👀 Ver todos los enlaces encontrados
+
+    # Expresión regular para archivos PDF, XLS y XLSX
+    patron = re.compile(r'([^\/]+\.pdf(?:\?.*|\/.*)?|[^\/]+\.xls(?:\?.*|\/.*)?|[^\/]+\.xlsx(?:\?.*|\/.*)?)$', re.IGNORECASE)
+
+    # Filtrar solo los enlaces con archivos
     archivos = [link for link in todos_los_links if patron.search(link)]
+
     if archivos:
+        print(f"📂 Archivos detectados en {nombre}:")
+        for archivo in archivos:
+            print(f"🔗 {archivo}")
         return "\n".join(sorted(set(archivos)))
-    print(f"⚠️ No se encontraron archivos en {url}.")
+
+    print(f"⚠️ No se encontraron archivos .pdf, .xls o .xlsx en {url}.")
     return None
 
 def obtener_archivos_viesgo():
