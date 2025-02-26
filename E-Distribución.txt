@@ -17,6 +17,7 @@
 /content/dam/edistribucion/conexion-a-la-red/descargables/nodos/EDRD_Capacidad_de_Acceso_2024_11_01.pdf
 /content/dam/edistribucion/conexion-a-la-red/descargables/nodos/EDRD_Capacidad_de_Acceso_2024_12_02.pdf
 /content/dam/edistribucion/conexion-a-la-red/descargables/nodos/EDRD_Capacidad_de_Acceso_2025_01_01.pdf
+/content/dam/edistribucion/conexion-a-la-red/descargables/nodos/EDRD_Capacidad_de_Acceso_2025_02_01.pdf
 /content/dam/edistribucion/general/descargables/nodos/EDRD_Capacidad_de_Acceso_2024_02_01.pdf
 /content/dam/edistribucion/general/descargables/nodos/EDRD_Capacidad_de_Acceso_2024_03_01.pdf
 /content/dam/edistribucion/general/descargables/nodos/EDRD_Capacidad_de_Acceso_2024_04_01.pdf
