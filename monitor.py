@@ -49,6 +49,15 @@ def obtener_html(url, intentos=3, espera=5):
 
 import re
 
+import requests
+from bs4 import BeautifulSoup
+import re
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
 def obtener_links_importantes(url, nombre):
     html = obtener_html(url)
     if not html:
@@ -61,7 +70,7 @@ def obtener_links_importantes(url, nombre):
     todos_los_links = [a['href'] for a in soup.find_all('a', href=True)]
     print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
 
-    # 🟢 Depuración especial para Viesgo: Imprimir todos los enlaces ANTES del filtrado
+    # 🟢 DEPURACIÓN: Imprimir todos los enlaces antes del filtrado para Viesgo
     if nombre == "Viesgo Distribución":
         print("\n🚨 DEPURACIÓN: TODOS los enlaces encontrados en Viesgo:")
         for enlace in todos_los_links:
@@ -73,15 +82,36 @@ def obtener_links_importantes(url, nombre):
     # Filtrar solo los enlaces que contienen archivos PDF, XLS o XLSX
     archivos = [link for link in todos_los_links if patron.search(link)]
 
-    # Mostrar los archivos filtrados
+    # 🟢 Si NO encontramos PDFs en la página normal y es Viesgo, usamos Selenium
+    if not archivos and nombre == "Viesgo Distribución":
+        print("⚠️ No se encontró PDF en HTML, intentando con Selenium...")
+
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")  # Modo sin interfaz gráfica
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+
+        # Cargar la página de Viesgo
+        driver.get(url)
+        time.sleep(5)  # Esperar a que cargue la web
+
+        # Obtener todos los enlaces de la web renderizada
+        selenium_links = [a.get_attribute("href") for a in driver.find_elements(By.TAG_NAME, "a")]
+
+        # Filtrar PDFs con Selenium
+        archivos = [link for link in selenium_links if link and "pdf" in link.lower()]
+
+        driver.quit()
+
+    # Mostrar los archivos detectados
     if archivos:
-        print(f"📂 Archivos detectados en {url}:")
+        print(f"📂 Archivos detectados en {nombre}:")
         for archivo in archivos:
             print(f"🔗 {archivo}")
-    else:
-        print(f"⚠️ No se encontraron archivos .pdf, .xls o .xlsx en {url}.")
+        return "\n".join(sorted(set(archivos)))  # Devolver los enlaces únicos en formato string
 
-    return "\n".join(sorted(set(archivos))) if archivos else None
+    print(f"⚠️ No se encontraron archivos .pdf, .xls o .xlsx en {url}.")
+    return None
 
 
 
