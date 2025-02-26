@@ -49,7 +49,7 @@ def obtener_html(url, intentos=3, espera=5):
 
 import re
 
-def obtener_links_importantes(url):
+def obtener_links_importantes(url, nombre):
     html = obtener_html(url)
     if not html:
         print(f"⚠️ No se pudo obtener HTML de {url}")
@@ -173,7 +173,7 @@ def revisar_cambios():
     detalles_cambios = []
 
     for nombre, url in URLS.items():
-        nuevo_contenido = obtener_links_importantes(url)
+        nuevo_contenido = obtener_links_importantes(url, nombre)
         if not nuevo_contenido:
             print(f"⚠️ No se pudo acceder a {nombre}")
             continue
