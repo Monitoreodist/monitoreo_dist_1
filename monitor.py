@@ -12,6 +12,17 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
+
+# Lista de URLs a monitorear
+URLS = {
+    "E-Distribución": "https://www.edistribucion.com/es/red-electrica/Nodos_capacidad_acceso.html",
+    "I-DE Iberdrola": "https://www.i-de.es/conexion-red-electrica/produccion-energia/mapa-capacidad-acceso",
+    "UFD Unión Fenosa": "https://www.ufd.es/capacidad-de-acceso-de-generacion/",
+    "Viesgo Distribución": "https://www.viesgodistribucion.com/soy-cliente/mapa-interactivo-de-la-red",
+    "E-Redes Distribución": "https://areaprivada.eredesdistribucion.es/blank/interactive-map"
+}
+
+
 def obtener_html(url, intentos=3, espera=5):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
