@@ -60,6 +60,12 @@ def obtener_links_importantes(url):
     # 🔍 Obtener todos los enlaces de la página
     todos_los_links = [a['href'] for a in soup.find_all('a', href=True)]
     print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
+
+    # 🟢 Depuración especial para Viesgo: Imprimir todos los enlaces ANTES del filtrado
+    if nombre == "Viesgo Distribución":
+        print("\n🚨 DEPURACIÓN: TODOS los enlaces encontrados en Viesgo:")
+        for enlace in todos_los_links:
+            print(f"🔗 {enlace}")
     
     # Expresión regular para capturar archivos .pdf, .xls, .xlsx sin importar los parámetros después
     patron = re.compile(r'([^\/]+\.pdf(?:\?.*|\/.*)?|[^\/]+\.xls(?:\?.*|\/.*)?|[^\/]+\.xlsx(?:\?.*|\/.*)?)$', re.IGNORECASE)
