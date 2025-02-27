@@ -34,8 +34,9 @@ def cargar_estado_viesgo():
 def guardar_estado_viesgo(nombre, contenido):
     filename = f"{nombre.replace(' ', '_')}.txt"
 
-    # 🔹 Convertir la lista en una cadena separada por saltos de línea
-    contenido_str = "\n".join(contenido) if isinstance(contenido, list) else contenido
+    # 🔹 Asegurar que contenido es una cadena de texto, si es lista, la convertimos
+    if isinstance(contenido, list):
+        contenido = "\n".join(contenido)  # Convierte lista en string con saltos de línea
 
     try:
         with open(filename, "w", encoding="utf-8") as f:
@@ -84,7 +85,7 @@ def detectar_cambios_viesgo():
             print(f"➖ {enlace}")
 
     if nuevos or eliminados:
-        guardar_estado_viesgo("Viesgo Distribución", nuevos_enlaces)
+        guardar_estado_viesgo("Viesgo Distribución", "\n".join(nuevos_enlaces))
     else:
         print("✅ No hay cambios en los archivos de Viesgo.")
 
