@@ -59,6 +59,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 def obtener_links_importantes(url, nombre):
+    """Obtiene los enlaces de archivos PDF, XLS y XLSX de una página web, excepto Viesgo."""
+    if nombre == "Viesgo Distribución":
+        return None  # Se manejará por la API
+        
     html = obtener_html(url)
     if not html:
         print(f"⚠️ No se pudo obtener HTML de {url}")
@@ -69,12 +73,6 @@ def obtener_links_importantes(url, nombre):
     # 🔍 Obtener todos los enlaces de la página
     todos_los_links = [a['href'] for a in soup.find_all('a', href=True)]
     print(f"\n🔍 Enlaces encontrados en {url} ({len(todos_los_links)} en total):")
-
-    # 🟢 DEPURACIÓN: Imprimir todos los enlaces antes del filtrado para Viesgo
-    if nombre == "Viesgo Distribución":
-        print("\n🚨 DEPURACIÓN: TODOS los enlaces encontrados en Viesgo:")
-        for enlace in todos_los_links:
-            print(f"🔗 {enlace}")
     
     # Expresión regular para capturar archivos .pdf, .xls, .xlsx sin importar los parámetros después
     patron = re.compile(r'([^\/]+\.pdf(?:\?.*|\/.*)?|[^\/]+\.xls(?:\?.*|\/.*)?|[^\/]+\.xlsx(?:\?.*|\/.*)?)$', re.IGNORECASE)
