@@ -69,23 +69,31 @@ def detectar_cambios_viesgo():
 
     if not nuevos_enlaces:
         print("⚠️ No se encontraron PDFs nuevos en Viesgo.")
-        return
+        return None, None
 
     nuevos = set(nuevos_enlaces) - set(enlaces_anteriores)
     eliminados = set(enlaces_anteriores) - set(nuevos_enlaces)
+    
+    cambios = []
+    detalles_cambios = []
 
     if nuevos:
         print("🆕 **Nuevos archivos en Viesgo:**")
         for enlace in nuevos:
             print(f"➕ {enlace}")
+        cambios.append("- Viesgo Distribución")
+        detalles_cambios.append(f"🔹 **Viesgo Distribución**:\n" + "\n".join(nuevos))
 
     if eliminados:
         print("❌ **Archivos eliminados en Viesgo:**")
         for enlace in eliminados:
             print(f"➖ {enlace}")
+        detalles_cambios.append(f"🔹 **Archivos eliminados en Viesgo**:\n" + "\n".join(eliminados))
 
     if nuevos or eliminados:
         guardar_estado_viesgo("Viesgo Distribución", "\n".join(nuevos_enlaces))
+    return cambios, detalles_cambios
+    
     else:
         print("✅ No hay cambios en los archivos de Viesgo.")
 
