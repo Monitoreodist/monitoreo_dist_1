@@ -94,8 +94,6 @@ def detectar_cambios_viesgo():
         guardar_estado_viesgo("Viesgo Distribución", "\n".join(nuevos_enlaces))
     return cambios, detalles_cambios
     
-    else:
-        print("✅ No hay cambios en los archivos de Viesgo.")
 
 if __name__ == "__main__":
     detectar_cambios_viesgo()
