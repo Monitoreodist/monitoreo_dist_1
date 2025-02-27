@@ -30,14 +30,32 @@ def cargar_estado_viesgo():
             return f.read().splitlines()
     return []
 
-def guardar_estado_viesgo(enlaces):
-    """Guarda el estado actual de los enlaces en un archivo."""
+# Función para guardar el estado en un archivo TXT y subirlo a GitHub
+def guardar_estado_viesgo(nombre, contenido):
+    filename = f"{nombre.replace(' ', '_')}.txt"
+
     try:
-        with open(VIESGO_ESTADO_FILE, "w", encoding="utf-8") as f:
-            f.write("\n".join(enlaces))
-        print(f"✅ Estado de Viesgo guardado correctamente en {VIESGO_ESTADO_FILE}")
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(contenido)
+        
+        print(f"✅ Estado guardado correctamente en {filename}")
+
+        # 📂 Verificar que el archivo existe antes de hacer commit
+        if os.path.exists(filename):
+            print(f"📂 Archivo {filename} creado correctamente, procediendo con git commit y push.")
+        else:
+            print(f"❌ ERROR: {filename} no encontrado después de crearlo.")
+
+        # 🟢 Hacer commit y push de los cambios en GitHub Actions
+        os.system("git config --global user.email 'github-actions@github.com'")
+        os.system("git config --global user.name 'GitHub Actions'")
+        os.system(f"git add {filename}")
+        os.system(f'git commit -m "Actualización de {nombre}" || echo "⚠️ No hay cambios para commitear."')
+        os.system("git push || echo '⚠️ No se pudo hacer push a GitHub'")
+
     except Exception as e:
-        print(f"❌ Error al guardar el estado de Viesgo: {e}")
+        print(f"❌ Error al guardar el estado de {nombre}: {e}")
+
 
 
 def detectar_cambios_viesgo():
