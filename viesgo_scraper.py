@@ -63,31 +63,41 @@ def guardar_estado_viesgo(nombre, contenido):
 
 
 
-def detectar_cambios_viesgo():
-    """Compara el estado actual con el anterior y detecta novedades en Viesgo."""
-    nuevos_enlaces = obtener_pdfs_viesgo()
-    enlaces_anteriores = cargar_estado_viesgo()
+import difflib
+import os
 
-    print("\n📂 **Viesgo Distribución** - Comparación de estado")
+def detectar_cambios_viesgo():
+    nombre = "Viesgo Distribución"
+    
+    # Cargar estado anterior
+    viejo_contenido = cargar_estado(nombre)
+
+    # Obtener nuevos enlaces de Viesgo
+    nuevo_contenido = obtener_links_importantes("https://www.viesgodistribucion.com", nombre)
+    if not nuevo_contenido:
+        print(f"⚠️ No se pudo acceder a {nombre}")
+        return [], []
+
+    # 🔍 Imprimir contenido anterior
+    print(f"\n📂 **{nombre}** - Comparación de estado")
     print("=" * 40)
 
-    if enlaces_anteriores:
-        print("📜 **Contenido anterior:**")
-        lineas_viejas = enlaces_anteriores.split("\n")
-        print(f"🔹 {len(lineas_viejas)} enlaces guardados anteriormente.")
+    if viejo_contenido:
+        lineas_viejas = viejo_contenido.split("\n")
+        print(f"📜 **Contenido anterior:** 🔹 {len(lineas_viejas)} enlaces guardados anteriormente.")
     else:
         print("📜 **Contenido anterior:** ❌ No había archivo previo o estaba vacío.")
 
-    if nuevos_enlaces:
-        lineas_nuevas = nuevos_enlaces
+    if nuevo_contenido:
+        lineas_nuevas = nuevo_contenido.split("\n")
         print(f"🆕 **Nuevo contenido:** 🔹 {len(lineas_nuevas)} enlaces encontrados en la web.")
     else:
         print("🆕 **Nuevo contenido:** ❌ No se encontró contenido nuevo.")
 
-    # Comparar las diferencias
+    # Comparar diferencias
     diferencias = list(difflib.unified_diff(
-        enlaces_anteriores.split("\n") if enlaces_anteriores else [],
-        nuevos_enlaces if nuevos_enlaces else [],
+        viejo_contenido.split("\n") if viejo_contenido else [],
+        nuevo_contenido.split("\n") if nuevo_contenido else [],
         lineterm=""
     ))
 
@@ -96,12 +106,12 @@ def detectar_cambios_viesgo():
 
     if diferencias:
         print("\n🔍 **Diferencias detectadas:**")
-        nuevos = [line[1:] for line in diferencias if line.startswith("+")]
+        novedades = [line[1:] for line in diferencias if line.startswith("+")]
         eliminados = [line[1:] for line in diferencias if line.startswith("-")]
 
-        if nuevos:
-            print(f"✅ **Nuevos enlaces encontrados ({len(nuevos)}):**")
-            for enlace in nuevos:
+        if novedades:
+            print(f"✅ **Nuevos enlaces encontrados ({len(novedades)}):**")
+            for enlace in novedades:
                 print(f"➕ {enlace}")
 
         if eliminados:
@@ -109,18 +119,18 @@ def detectar_cambios_viesgo():
             for enlace in eliminados:
                 print(f"➖ {enlace}")
 
-        cambios.append("- Viesgo Distribución")
-        detalles_cambios.append(f"🔹 **Viesgo Distribución**:\n{diferencias}\n")
+        cambios.append(f"- {nombre}: https://www.viesgodistribucion.com")
+        detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
 
-        # Guardar la nueva lista de archivos detectados
-        guardar_estado_viesgo("Viesgo_Distribución", "\n".join(nuevos_enlaces))
+        # Guardar nuevo estado
+        guardar_estado(nombre, nuevo_contenido)
 
     else:
         print("✅ No hay cambios detectados.")
 
-    print("=" * 40)  # Separador para mayor claridad
+    print("=" * 40)
 
-    return cambios, detalles_cambios  # 🔹 Ahora devuelve los cambios detectados
+    return cambios, detalles_cambios
 
     
 
