@@ -87,7 +87,7 @@ def detectar_cambios_viesgo():
     # Comparar las diferencias
     diferencias = list(difflib.unified_diff(
         enlaces_anteriores.split("\n") if enlaces_anteriores else [],
-        nuevos_enlaces.split("\n") if nuevos_enlaces else [],
+        "\n".join(nuevos_enlaces) if nuevos_enlaces else [],
         lineterm=""
     ))
 
