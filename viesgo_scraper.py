@@ -31,9 +31,14 @@ def cargar_estado_viesgo():
     return []
 
 def guardar_estado_viesgo(enlaces):
-    """Guarda el estado actual en un archivo."""
-    with open(VIESGO_ESTADO_FILE, "w", encoding="utf-8") as f:
-        f.write("\n".join(enlaces))
+    """Guarda el estado actual de los enlaces en un archivo."""
+    try:
+        with open(VIESGO_ESTADO_FILE, "w", encoding="utf-8") as f:
+            f.write("\n".join(enlaces))
+        print(f"✅ Estado de Viesgo guardado correctamente en {VIESGO_ESTADO_FILE}")
+    except Exception as e:
+        print(f"❌ Error al guardar el estado de Viesgo: {e}")
+
 
 def detectar_cambios_viesgo():
     """Compara el estado actual con el anterior y detecta novedades."""
