@@ -67,7 +67,7 @@ def detectar_cambios_viesgo():
     nombre = "Viesgo Distribución"
     
     # Cargar estado anterior
-    viejo_contenido = cargar_estado()
+    viejo_contenido = cargar_estado(nombre)
 
     # Obtener nuevos enlaces de Viesgo
     nuevo_contenido = obtener_pdfs_viesgo()
