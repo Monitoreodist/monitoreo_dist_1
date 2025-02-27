@@ -78,7 +78,7 @@ def detectar_cambios_viesgo():
         print("📜 **Contenido anterior:** ❌ No había archivo previo o estaba vacío.")
 
     if nuevos_enlaces:
-        lineas_nuevas = nuevos_enlaces.split("\n")
+        lineas_nuevas = nuevos_enlaces
         print(f"🆕 **Nuevo contenido:** 🔹 {len(lineas_nuevas)} enlaces encontrados en la web.")
     else:
         print("🆕 **Nuevo contenido:** ❌ No se encontró contenido nuevo.")
