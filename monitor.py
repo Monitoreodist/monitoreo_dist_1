@@ -6,6 +6,7 @@ import time
 import difflib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import viesgo_scraper
 
 # Lista de URLs a monitorear
 URLS = {
