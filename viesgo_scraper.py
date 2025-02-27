@@ -2,7 +2,7 @@ import requests
 import os
 
 # URL de la API de Viesgo (ajusta si es diferente)
-VIESGO_API_URL = "https://www.viesgodistribucion.com/api/getNetHistory"
+VIESGO_API_URL = "https://srv.areaprivada.viesgodistribucion.com/private/interactivemap/getNetHistory"
 
 # Archivo donde se guardará el estado anterior
 VIESGO_ESTADO_FILE = "Viesgo.txt"
