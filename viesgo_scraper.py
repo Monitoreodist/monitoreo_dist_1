@@ -1,5 +1,6 @@
 import requests
 import os
+import difflib
 
 # URL de la API de Viesgo (ajusta si es diferente)
 VIESGO_API_URL = "https://srv.areaprivada.viesgodistribucion.com/private/interactivemap/getNetHistory"
