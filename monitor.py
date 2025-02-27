@@ -137,9 +137,7 @@ def guardar_estado(nombre, contenido):
         os.system(f"git add {filename}")
         os.system(f'git commit -m "Actualización de {nombre}" || echo "⚠️ No hay cambios para commitear."')
         os.system("git push || echo '⚠️ No se pudo hacer push a GitHub'")
-        os.system("git add Viesgo.txt")
-        os.system('git commit -m "Actualización de Viesgo" || echo "⚠️ No hay cambios para commitear."')
-        os.system("git push || echo '⚠️ No se pudo hacer push a GitHub'")
+
 
 
 
