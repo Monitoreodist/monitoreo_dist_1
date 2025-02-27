@@ -206,8 +206,13 @@ def revisar_cambios():
     # Primero, revisar Viesgo usando su API
     print("\n🔍 **Revisando Viesgo Distribución...**")
     cambios_viesgo, detalles_viesgo = viesgo_scraper.detectar_cambios_viesgo()
-    
 
+    if cambios_viesgo:
+        cambios.extend(cambios_viesgo)  # 🔹 Agregar cambios de Viesgo a la lista general
+    if detalles_viesgo:
+        detalles_cambios.extend(detalles_viesgo)
+
+    
     for nombre, url in URLS.items():
         
         if nombre == "Viesgo Distribución":  # 🔹 Saltar Viesgo, ya se procesó antes
