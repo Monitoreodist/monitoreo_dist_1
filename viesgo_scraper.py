@@ -24,7 +24,7 @@ def obtener_pdfs_viesgo():
         print(f"❌ Error de conexión con la API de Viesgo: {e}")
     return []
 
-def cargar_estado_viesgo():
+def cargar_estado():
     """Carga el estado anterior desde un archivo."""
     if os.path.exists(VIESGO_ESTADO_FILE):
         with open(VIESGO_ESTADO_FILE, "r", encoding="utf-8") as f:
