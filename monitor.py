@@ -13,7 +13,6 @@ URLS = {
     "E-Distribución": "https://www.edistribucion.com/es/red-electrica/Nodos_capacidad_acceso.html",
     "I-DE Iberdrola": "https://www.i-de.es/conexion-red-electrica/produccion-energia/mapa-capacidad-acceso",
     "UFD Unión Fenosa": "https://www.ufd.es/capacidad-de-acceso-de-generacion/",
-    "Viesgo Distribución": "https://www.viesgodistribucion.com/soy-cliente/mapa-interactivo-de-la-red",
     "E-Redes Distribución": "https://areaprivada.eredesdistribucion.es/blank/interactive-map"  # Nueva URL
 }
 
@@ -202,6 +201,11 @@ import difflib
 def revisar_cambios():
     cambios = []
     detalles_cambios = []
+
+    # Primero, revisar Viesgo usando su API
+    print("\n🔍 **Revisando Viesgo Distribución...**")
+    viesgo_scraper.detectar_cambios_viesgo()
+    
 
     for nombre, url in URLS.items():
         nuevo_contenido = obtener_links_importantes(url, nombre)
