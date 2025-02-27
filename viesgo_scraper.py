@@ -113,7 +113,7 @@ def detectar_cambios_viesgo():
         detalles_cambios.append(f"🔹 **Viesgo Distribución**:\n{diferencias}\n")
 
         # Guardar la nueva lista de archivos detectados
-        guardar_estado_viesgo("Viesgo_Distribución.txt", "\n".join(nuevos_enlaces))
+        guardar_estado_viesgo("Viesgo_Distribución", "\n".join(nuevos_enlaces))
 
     else:
         print("✅ No hay cambios detectados.")
