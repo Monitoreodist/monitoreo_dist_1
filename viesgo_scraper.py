@@ -34,6 +34,9 @@ def cargar_estado_viesgo():
 def guardar_estado_viesgo(nombre, contenido):
     filename = f"{nombre.replace(' ', '_')}.txt"
 
+    # 🔹 Convertir la lista en una cadena separada por saltos de línea
+    contenido_str = "\n".join(contenido) if isinstance(contenido, list) else contenido
+
     try:
         with open(filename, "w", encoding="utf-8") as f:
             f.write(contenido)
