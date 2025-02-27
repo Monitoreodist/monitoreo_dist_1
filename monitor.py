@@ -205,10 +205,14 @@ def revisar_cambios():
 
     # Primero, revisar Viesgo usando su API
     print("\n🔍 **Revisando Viesgo Distribución...**")
-    viesgo_scraper.detectar_cambios_viesgo()
+    cambios_viesgo, detalles_viesgo = viesgo_scraper.detectar_cambios_viesgo()
     
 
     for nombre, url in URLS.items():
+        
+        if nombre == "Viesgo Distribución":  # 🔹 Saltar Viesgo, ya se procesó antes
+            continue
+
         nuevo_contenido = obtener_links_importantes(url, nombre)
         if not nuevo_contenido:
             print(f"⚠️ No se pudo acceder a {nombre}")
