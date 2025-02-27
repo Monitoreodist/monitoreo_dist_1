@@ -81,7 +81,7 @@ def detectar_cambios_viesgo():
             print(f"➖ {enlace}")
 
     if nuevos or eliminados:
-        guardar_estado_viesgo(nuevos_enlaces)
+        guardar_estado_viesgo("Viesgo Distribución", nuevos_enlaces)
     else:
         print("✅ No hay cambios en los archivos de Viesgo.")
 
