@@ -1,7 +1,8 @@
 import requests
 import os
 import difflib
-from monitor import obtener_links_importantes
+from monitor import obtener_links_importantes, cargar_estado
+
 
 
 # URL de la API de Viesgo (ajusta si es diferente)
@@ -26,12 +27,6 @@ def obtener_pdfs_viesgo():
         print(f"❌ Error de conexión con la API de Viesgo: {e}")
     return []
 
-def cargar_estado(nombre):
-    """Carga el estado anterior desde un archivo."""
-    if os.path.exists(VIESGO_ESTADO_FILE):
-        with open(VIESGO_ESTADO_FILE, "r", encoding="utf-8") as f:
-            return f.read().splitlines()
-    return []
 
 # Función para guardar el estado en un archivo TXT y subirlo a GitHub
 def guardar_estado_viesgo(nombre, contenido):
@@ -72,10 +67,11 @@ def detectar_cambios_viesgo():
     nombre = "Viesgo Distribución"
     
     # Cargar estado anterior
-    viejo_contenido = cargar_estado(nombre)
+    viejo_contenido = cargar_estado()
 
     # Obtener nuevos enlaces de Viesgo
-    nuevo_contenido = obtener_links_importantes("https://www.viesgodistribucion.com", nombre)
+    nuevo_contenido = obtener_pdfs_viesgo()
+    nuevo_contenido = "\n".join(obtener_pdfs_viesgo())
     if not nuevo_contenido:
         print(f"⚠️ No se pudo acceder a {nombre}")
         return [], []
@@ -125,7 +121,7 @@ def detectar_cambios_viesgo():
         detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
 
         # Guardar nuevo estado
-        guardar_estado(nombre, nuevo_contenido)
+        guardar_estado_viesgo(nombre, nuevo_contenido)
 
     else:
         print("✅ No hay cambios detectados.")
