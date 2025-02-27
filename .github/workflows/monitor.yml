@@ -24,10 +24,8 @@ jobs:
 
       - name: Instalar Chrome y ChromeDriver
         run: |
-          sudo apt update
-          sudo apt install -y google-chrome-stable
-          sudo apt install -y chromium-chromedriver
-          echo "✅ Chrome y ChromeDriver instalados"
+          google-chrome --version
+          chromedriver --version
 
       - name: Ejecutar el script de monitoreo
         env:
