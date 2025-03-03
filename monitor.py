@@ -191,7 +191,7 @@ def enviar_email(mensaje):
     msg["Subject"] = "🔔 Cambios detectados en las webs monitoreadas"
 
     msg.attach(MIMEText(mensaje, "plain", "utf-8"))
-    msg.attach(MIMEText(f"<html><body><pre>{mensaje}</pre></body></html>", "html", "utf-8"))
+    #msg.attach(MIMEText(f"<html><body><pre>{mensaje}</pre></body></html>", "html", "utf-8"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
@@ -267,7 +267,7 @@ def revisar_cambios():
                 print(f"✅ **Nuevos enlaces encontrados ({len(novedades)}):**")
                 for enlace in novedades:
                     print(f"➕ {enlace}")
-                novedades_globales.extend(novedades)
+                    novedades_globales.append((nombre, enlace))
 
           #  if eliminados:
           #      print(f"❌ **Enlaces eliminados ({len(eliminados)}):**")
@@ -286,9 +286,21 @@ def revisar_cambios():
         print("=" * 40)  # Separador para mayor claridad
         
     if novedades_globales:
+        # 📝 Construir mensaje agrupando por distribuidora
         mensaje = "🔔 **Se han detectado novedades en las siguientes páginas:**\n\n"
-        for enlace in novedades_globales:
-            mensaje += f"➕ {enlace}\n"
+        distribuidora_novedades = {}
+
+        for nombre, enlace in novedades_globales:
+            if nombre not in distribuidora_novedades:
+                distribuidora_novedades[nombre] = []
+            distribuidora_novedades[nombre].append(enlace)
+
+        for nombre, enlaces in distribuidora_novedades.items():
+            mensaje += f"📌 **{nombre}**:\n"
+            for enlace in enlaces:
+                mensaje += f"➕ {enlace}\n"
+            mensaje += "\n"
+
         enviar_email(mensaje)
     else:
         print("✅ No hay cambios en las páginas.")
