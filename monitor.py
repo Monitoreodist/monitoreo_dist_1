@@ -185,7 +185,7 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 
 def enviar_email(detalles_cambios):
-    """ Envía un correo con los cambios detectados, mostrando solo los nuevos enlaces sin duplicaciones. """
+    """ Envía un correo con los cambios detectados, mostrando solo los nuevos enlaces correctamente. """
     if not detalles_cambios:
         print("✅ No hay cambios detectados. No se enviará correo.")
         return
@@ -201,6 +201,9 @@ def enviar_email(detalles_cambios):
     # Mensaje en formato HTML
     mensaje_html = "<html><body><h2>🔔 Se han detectado cambios en las siguientes páginas:</h2><ul>"
 
+    print("\n🔍 DEPURACIÓN: Detalles de cambios recibidos:")
+    print(detalles_cambios)  # 🚀 Imprimir lo que se recibe para validar
+
     for cambio in detalles_cambios:
         if ":\n" not in cambio:
             continue  # Ignorar formato incorrecto
@@ -208,10 +211,13 @@ def enviar_email(detalles_cambios):
         plataforma, diffs = cambio.split(":\n", 1)
         lineas = diffs.split("\n")
 
-        nuevos = [line[1:] for line in lineas if line.startswith("+")]  # Solo enlaces nuevos
+        # Extraer SOLO los enlaces nuevos agregados (+)
+        nuevos = [line[1:].strip() for line in lineas if line.startswith("+") and (".pdf" in line or ".xls" in line or ".xlsx" in line)]
 
         if nuevos:
-            mensaje_texto += f"\n📂 **{plataforma}**:\n"
+            print(f"✅ {plataforma} - Nuevos enlaces detectados: {nuevos}")  # 🔍 Verificar qué enlaces aparecen
+
+            mensaje_texto += f"\n📂 **{plataforma}**\n"
             mensaje_html += f"<li><b>{plataforma}</b><ul>"
 
             for enlace in nuevos:
@@ -221,6 +227,11 @@ def enviar_email(detalles_cambios):
             mensaje_html += "</ul></li>"
 
     mensaje_html += "</ul></body></html>"
+
+    # Si no hay enlaces nuevos, no enviamos nada
+    if "📂" not in mensaje_texto:
+        print("⚠️ No se encontraron enlaces nuevos. No se enviará correo.")
+        return
 
     # Adjuntar versiones en texto y HTML
     msg.attach(MIMEText(mensaje_texto.strip(), "plain", "utf-8"))
