@@ -216,17 +216,23 @@ def revisar_cambios():
     cambios_viesgo, detalles_viesgo = viesgo_scraper.detectar_cambios_viesgo()
 
     if cambios_viesgo:
-        cambios.extend(cambios_viesgo)  # 🔹 Agregar cambios de Viesgo a la lista general
+        cambios.extend(cambios_viesgo)  # 🔹 Agregar cambios de Viesgo a la lista generalt
+        for enlace in cambios_viesgo:
+            novedades_globales.append(("Viesgo Distribución", enlace))
     if detalles_viesgo:
         detalles_cambios.extend(detalles_viesgo)
+
+
+
 
     
     for nombre, url in URLS.items():
         
         if nombre == "Viesgo Distribución":  # 🔹 Saltar Viesgo, ya se procesó antes
-            continue
+            nuevo_contenido = viesgo_scraper.obtener_links_viesgo()
+        else:
+            nuevo_contenido = obtener_links_importantes(url, nombre)
 
-        nuevo_contenido = obtener_links_importantes(url, nombre)
         if not nuevo_contenido:
             print(f"⚠️ No se pudo acceder a {nombre}")
             continue
