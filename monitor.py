@@ -259,7 +259,8 @@ def revisar_cambios():
 
         if diferencias:
             print("\n🔍 **Diferencias detectadas:**")
-            novedades = [line[1:].strip() for line in diferencias if line.startswith("+") and line[1:].strip().startswith("http")]
+            novedades = [line[1:].strip() for line in diferencias if line.startswith("+") and (line[1:].strip().startswith("http") or line[1:].strip().startswith("/"))]
+
            # eliminados = [line[1:] for line in diferencias if line.startswith("-")]
 
             if novedades:
