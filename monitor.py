@@ -184,15 +184,40 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 
 
-# Función para enviar email con notificación de cambios
-def enviar_email(mensaje):
+def enviar_email(detalles_cambios):
+    """ Envía un correo con los cambios detectados, mostrando solo los nuevos enlaces sin duplicaciones. """
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
     msg["Subject"] = "🔔 Cambios detectados en las webs monitoreadas"
 
-    msg.attach(MIMEText(mensaje, "plain", "utf-8"))
-    msg.attach(MIMEText(f"<html><body><pre>{mensaje}</pre></body></html>", "html", "utf-8"))
+    mensaje_texto = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n"
+    mensaje_html = "<html><body><h2>🔔 Cambios detectados en las siguientes páginas:</h2><ul>"
+
+    for cambio in detalles_cambios:
+        if ":\n" not in cambio:
+            continue  # Ignorar formato incorrecto
+
+        plataforma, diffs = cambio.split(":\n", 1)
+        lineas = diffs.split("\n")
+
+        nuevos = [line[1:] for line in lineas if line.startswith("+")]  # Solo enlaces nuevos
+
+        if nuevos:
+            mensaje_texto += f"\n📂 **{plataforma}**:\n"
+            mensaje_html += f"<li><b>{plataforma}</b><ul>"
+
+            for enlace in nuevos:
+                mensaje_texto += f"  ➕ {enlace}\n"
+                mensaje_html += f"<li><a href='{enlace}'>{enlace}</a></li>"
+
+            mensaje_html += "</ul></li>"
+
+    mensaje_html += "</ul></body></html>"
+
+    # Adjuntar versiones en texto y HTML
+    msg.attach(MIMEText(mensaje_texto, "plain", "utf-8"))
+    msg.attach(MIMEText(mensaje_html, "html", "utf-8"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
@@ -201,6 +226,7 @@ def enviar_email(mensaje):
         print("📧 Correo enviado correctamente.")
     except Exception as e:
         print(f"❌ Error al enviar el correo: {e}")
+
 
 
 
