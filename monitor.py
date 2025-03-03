@@ -186,13 +186,20 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 def enviar_email(detalles_cambios):
     """ Envía un correo con los cambios detectados, mostrando solo los nuevos enlaces sin duplicaciones. """
+    if not detalles_cambios:
+        print("✅ No hay cambios detectados. No se enviará correo.")
+        return
+
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
     msg["Subject"] = "🔔 Cambios detectados en las webs monitoreadas"
 
-    mensaje_texto = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n"
-    mensaje_html = "<html><body><h2>🔔 Cambios detectados en las siguientes páginas:</h2><ul>"
+    # Mensaje en texto plano
+    mensaje_texto = "🔔 **Se han detectado cambios en las siguientes páginas:**\n"
+    
+    # Mensaje en formato HTML
+    mensaje_html = "<html><body><h2>🔔 Se han detectado cambios en las siguientes páginas:</h2><ul>"
 
     for cambio in detalles_cambios:
         if ":\n" not in cambio:
@@ -216,16 +223,14 @@ def enviar_email(detalles_cambios):
     mensaje_html += "</ul></body></html>"
 
     # Adjuntar versiones en texto y HTML
-    msg.attach(MIMEText(mensaje_texto, "plain", "utf-8"))
+    msg.attach(MIMEText(mensaje_texto.strip(), "plain", "utf-8"))
     msg.attach(MIMEText(mensaje_html, "html", "utf-8"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
-        print("📧 Correo enviado correctamente.")
-    except Exception as e:
-        print(f"❌ Error al enviar el correo: {e}")
+            server.sendmail(EMAIL_SENDER, EMAIL
+
 
 
 
