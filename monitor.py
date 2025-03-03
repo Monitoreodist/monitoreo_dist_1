@@ -260,6 +260,7 @@ def revisar_cambios():
         if diferencias:
             print("\n🔍 **Diferencias detectadas:**")
             novedades = [line[1:] for line in diferencias if line.startswith("+")]
+            print(novedades)
            # eliminados = [line[1:] for line in diferencias if line.startswith("-")]
 
             if novedades:
@@ -283,7 +284,8 @@ def revisar_cambios():
             print("✅ No hay cambios detectados.")
 
         print("=" * 40)  # Separador para mayor claridad
-
+        
+    print(novedades_globales)
     if novedades_globales:
         mensaje = "🔔 **Se han detectado novedades en las siguientes páginas:**\n\n"
         for enlace in novedades_globales:
