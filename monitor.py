@@ -229,10 +229,10 @@ def enviar_email(detalles_cambios):
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_SENDER, EMAIL
-
-
-
+            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
+        print("📧 Correo enviado correctamente.")
+    except Exception as e:
+        print(f"❌ Error al enviar el correo: {e}")
 
 
 
