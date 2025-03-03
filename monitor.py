@@ -218,90 +218,24 @@ def formatear_diferencias(detalles_cambios):
 
 
 
-def enviar_email(detalles_cambios):
-    mensaje_texto, mensaje_html = formatear_diferencias(detalles_cambios)
-
+# Función para enviar email con notificación de cambios
+def enviar_email(mensaje):
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
     msg["Subject"] = "🔔 Cambios detectados en las webs monitoreadas"
 
-    html_content = f"""
-    <html>
-    <head>
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                line-height: 1.6;
-                color: #333;
-            }}
-            .container {{
-                max-width: 800px;
-                margin: auto;
-                padding: 20px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                background-color: #f9f9f9;
-            }}
-            h2 {{
-                color: #2c3e50;
-            }}
-            .alert {{
-                color: red;
-                font-weight: bold;
-            }}
-            table {{
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 15px;
-            }}
-            th, td {{
-                padding: 10px;
-                border: 1px solid #ddd;
-                text-align: left;
-            }}
-            th {{
-                background-color: #2c3e50;
-                color: white;
-            }}
-            .new {{
-                background-color: #d4edda;
-                color: #155724;
-            }}
-            .removed {{
-                background-color: #f8d7da;
-                color: #721c24;
-            }}
-            a {{
-                color: #007bff;
-                text-decoration: none;
-            }}
-            a:hover {{
-                text-decoration: underline;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h2>🔔 Cambios Detectados en las Páginas Monitoreadas</h2>
-            <p>Se han detectado los siguientes cambios en las páginas:</p>
-            {mensaje_html}
-        </div>
-    </body>
-    </html>
-    """
-
-    # Adjuntar versión en texto plano y HTML
-    msg.attach(MIMEText(mensaje_texto, "plain", "utf-8"))
-    msg.attach(MIMEText(html_content, "html", "utf-8"))
+    msg.attach(MIMEText(mensaje, "plain", "utf-8"))
+    msg.attach(MIMEText(f"<html><body><pre>{mensaje}</pre></body></html>", "html", "utf-8"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
             server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
-        print("📧 Correo enviado correctamente con formato HTML.")
+        print("📧 Correo enviado correctamente.")
     except Exception as e:
         print(f"❌ Error al enviar el correo: {e}")
+
 
 
 
