@@ -209,6 +209,7 @@ import difflib
 def revisar_cambios():
     cambios = []
     detalles_cambios = []
+    novedades_globales= []
 
     # Primero, revisar Viesgo usando su API
     print("\n🔍 **Revisando Viesgo Distribución...**")
@@ -259,20 +260,21 @@ def revisar_cambios():
         if diferencias:
             print("\n🔍 **Diferencias detectadas:**")
             novedades = [line[1:] for line in diferencias if line.startswith("+")]
-            eliminados = [line[1:] for line in diferencias if line.startswith("-")]
+           # eliminados = [line[1:] for line in diferencias if line.startswith("-")]
 
             if novedades:
                 print(f"✅ **Nuevos enlaces encontrados ({len(novedades)}):**")
                 for enlace in novedades:
                     print(f"➕ {enlace}")
+                novedades_globales.extend(novedades)
 
-            if eliminados:
-                print(f"❌ **Enlaces eliminados ({len(eliminados)}):**")
-                for enlace in eliminados:
-                    print(f"➖ {enlace}")
+          #  if eliminados:
+          #      print(f"❌ **Enlaces eliminados ({len(eliminados)}):**")
+          #      for enlace in eliminados:
+          #          print(f"➖ {enlace}")
 
-            cambios.append(f"- {nombre}: {url}")
-            detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
+          #  cambios.append(f"- {nombre}: {url}")
+          #  detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
 
             # Guardar la nueva lista de archivos detectados
             guardar_estado(nombre, nuevo_contenido)
@@ -282,8 +284,10 @@ def revisar_cambios():
 
         print("=" * 40)  # Separador para mayor claridad
 
-    if cambios:
-        mensaje = "🔔 **Se han detectado novedades en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(novedades)
+    if novedades_globales:
+        mensaje = "🔔 **Se han detectado novedades en las siguientes páginas:**\n\n"
+        for enlace in novedades_globales:
+            mensaje += f"➕ {enlace}\n"
         enviar_email(mensaje)
     else:
         print("✅ No hay cambios en las páginas.")
