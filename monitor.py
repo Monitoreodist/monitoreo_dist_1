@@ -179,41 +179,7 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 
 
-def formatear_diferencias(detalles_cambios):
-    mensaje_html = """
-    <table>
-        <tr>
-            <th>Plataforma</th>
-            <th>Tipo de Cambio</th>
-            <th>Enlace</th>
-        </tr>
-    """
-    
-    mensaje_texto = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n"
 
-    for cambio in detalles_cambios:
-        if ":\n" not in cambio:
-            print(f"⚠️ Formato incorrecto en cambio: {cambio}")  # Depuración
-            continue  # Saltar este cambio
-
-        plataforma, diffs = cambio.split(":\n", 1)
-        lineas = diffs.split("\n")
-
-        nuevos = [line[1:] for line in lineas if line.startswith("+")]
-        eliminados = [line[1:] for line in lineas if line.startswith("-")]
-
-        mensaje_texto += f"📂 **{plataforma}**:\n"
-        
-        if nuevos:
-            mensaje_texto += f"✅ **Nuevos enlaces encontrados ({len(nuevos)}):**\n"
-            for enlace in nuevos:
-                mensaje_texto += f"➕ {enlace}\n"
-                mensaje_html += f"<tr class='new'><td>{plataforma}</td><td><b>Nuevo</b></td><td><a href='{enlace}'>{enlace}</a></td></tr>"
-
-        if eliminados:
-            mensaje_texto += f"❌ **Enlaces eliminados ({len(eliminados)}):**\n"
-            for enlace in eliminados:
-        
 
 
 
