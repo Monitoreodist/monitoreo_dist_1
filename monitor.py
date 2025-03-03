@@ -202,6 +202,8 @@ def enviar_email(detalles_cambios):
     mensaje_html = "<html><body><h2>🔔 Se han detectado cambios en las siguientes páginas:</h2><ul>"
 
     print("\n🔍 DEPURACIÓN: Detalles de cambios recibidos:")
+    cambios_detectados = False  # Bandera para saber si hay cambios reales
+
     for cambio in detalles_cambios:
         print(cambio)  # 🚀 Ver qué datos se están procesando
 
@@ -216,7 +218,8 @@ def enviar_email(detalles_cambios):
         nuevos = [line[1:].strip() for line in lineas if line.startswith("+") and "http" in line]
 
         if nuevos:
-            print(f"✅ {plataforma} - Enlace añadido: {nuevos}")  # 🔍 Verificar qué enlaces aparecen
+            cambios_detectados = True
+            print(f"✅ {plataforma} - Enlaces añadidos: {nuevos}")  # 🔍 Verificar qué enlaces aparecen
 
             mensaje_texto += f"\n📂 **{plataforma}**\n"
             mensaje_html += f"<li><b>{plataforma}</b><ul>"
@@ -230,7 +233,7 @@ def enviar_email(detalles_cambios):
     mensaje_html += "</ul></body></html>"
 
     # Si no hay enlaces nuevos, no enviamos nada
-    if "📂" not in mensaje_texto:
+    if not cambios_detectados:
         print("⚠️ No se encontraron enlaces añadidos. No se enviará correo.")
         return
 
