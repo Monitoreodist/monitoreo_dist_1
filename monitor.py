@@ -192,6 +192,10 @@ def formatear_diferencias(detalles_cambios):
     mensaje_texto = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n"
 
     for cambio in detalles_cambios:
+        if ":\n" not in cambio:
+            print(f"⚠️ Formato incorrecto en cambio: {cambio}")  # Depuración
+            continue  # Saltar este cambio
+
         plataforma, diffs = cambio.split(":\n", 1)
         lineas = diffs.split("\n")
 
@@ -209,14 +213,8 @@ def formatear_diferencias(detalles_cambios):
         if eliminados:
             mensaje_texto += f"❌ **Enlaces eliminados ({len(eliminados)}):**\n"
             for enlace in eliminados:
-                mensaje_texto += f"➖ {enlace}\n"
-                mensaje_html += f"<tr class='removed'><td>{plataforma}</td><td><b>Eliminado</b></td><td><a href='{enlace}'>{enlace}</a></td></tr>"
+        
 
-        mensaje_texto += "\n"
-
-    mensaje_html += "</table>"
-
-    return mensaje_texto, mensaje_html
 
 
 
