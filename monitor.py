@@ -185,9 +185,9 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 
 def enviar_email(detalles_cambios):
-    """ Envía un correo con los cambios detectados, mostrando solo los nuevos enlaces correctamente. """
-    if not detalles_cambios:
-        print("✅ No hay cambios detectados. No se enviará correo.")
+    """ Envía un correo con los cambios detectados, mostrando solo los enlaces añadidos correctamente. """
+    if not detalles_cambios or not isinstance(detalles_cambios, list):
+        print("✅ No hay cambios detectados o formato incorrecto. No se enviará correo.")
         return
 
     msg = MIMEMultipart()
@@ -202,20 +202,21 @@ def enviar_email(detalles_cambios):
     mensaje_html = "<html><body><h2>🔔 Se han detectado cambios en las siguientes páginas:</h2><ul>"
 
     print("\n🔍 DEPURACIÓN: Detalles de cambios recibidos:")
-    print(detalles_cambios)  # 🚀 Imprimir lo que se recibe para validar
-
     for cambio in detalles_cambios:
-        if ":\n" not in cambio:
-            continue  # Ignorar formato incorrecto
+        print(cambio)  # 🚀 Ver qué datos se están procesando
+
+        # Verificar si el cambio está en el formato correcto
+        if not isinstance(cambio, str) or ":\n" not in cambio:
+            continue  # Ignorar entradas no válidas
 
         plataforma, diffs = cambio.split(":\n", 1)
-        lineas = diffs.split("\n")
+        lineas = diffs.strip("[]").replace("'", "").split(", ")
 
-        # Extraer SOLO los enlaces nuevos agregados (+)
-        nuevos = [line[1:].strip() for line in lineas if line.startswith("+") and (".pdf" in line or ".xls" in line or ".xlsx" in line)]
+        # Extraer SOLO los enlaces nuevos añadidos (+)
+        nuevos = [line[1:].strip() for line in lineas if line.startswith("+") and "http" in line]
 
         if nuevos:
-            print(f"✅ {plataforma} - Nuevos enlaces detectados: {nuevos}")  # 🔍 Verificar qué enlaces aparecen
+            print(f"✅ {plataforma} - Enlace añadido: {nuevos}")  # 🔍 Verificar qué enlaces aparecen
 
             mensaje_texto += f"\n📂 **{plataforma}**\n"
             mensaje_html += f"<li><b>{plataforma}</b><ul>"
@@ -230,7 +231,7 @@ def enviar_email(detalles_cambios):
 
     # Si no hay enlaces nuevos, no enviamos nada
     if "📂" not in mensaje_texto:
-        print("⚠️ No se encontraron enlaces nuevos. No se enviará correo.")
+        print("⚠️ No se encontraron enlaces añadidos. No se enviará correo.")
         return
 
     # Adjuntar versiones en texto y HTML
@@ -244,7 +245,6 @@ def enviar_email(detalles_cambios):
         print("📧 Correo enviado correctamente.")
     except Exception as e:
         print(f"❌ Error al enviar el correo: {e}")
-
 
 
 import difflib
