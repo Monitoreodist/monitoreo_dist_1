@@ -184,62 +184,14 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 
 
-def enviar_email(detalles_cambios):
-    """ Envía un correo con los cambios detectados, mostrando solo los enlaces añadidos correctamente. """
-    if not detalles_cambios or not isinstance(detalles_cambios, list):
-        print("✅ No hay cambios detectados o formato incorrecto. No se enviará correo.")
-        return
-
+def enviar_email(mensaje):
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
     msg["Subject"] = "🔔 Cambios detectados en las webs monitoreadas"
 
-    # Mensaje en texto plano
-    mensaje_texto = "🔔 **Se han detectado cambios en las siguientes páginas:**\n"
-    
-    # Mensaje en formato HTML
-    mensaje_html = "<html><body><h2>🔔 Se han detectado cambios en las siguientes páginas:</h2><ul>"
-
-    print("\n🔍 DEPURACIÓN: Detalles de cambios recibidos:")
-    cambios_detectados = False  # Bandera para saber si hay cambios reales
-
-    for cambio in detalles_cambios:
-        print(cambio)  # 🚀 Ver qué datos se están procesando
-
-        # Verificar si el cambio está en el formato correcto
-        if not isinstance(cambio, str) or ":\n" not in cambio:
-            continue  # Ignorar entradas no válidas
-
-        plataforma, diffs = cambio.split(":\n", 1)
-        lineas = diffs.strip("[]").replace("'", "").split(", ")
-
-        # Extraer SOLO los enlaces nuevos añadidos (+)
-        nuevos = [line[1:].strip() for line in lineas if line.startswith("+") and "http" in line]
-
-        if nuevos:
-            cambios_detectados = True
-            print(f"✅ {plataforma} - Enlaces añadidos: {nuevos}")  # 🔍 Verificar qué enlaces aparecen
-
-            mensaje_texto += f"\n📂 **{plataforma}**\n"
-            mensaje_html += f"<li><b>{plataforma}</b><ul>"
-
-            for enlace in nuevos:
-                mensaje_texto += f"  ➕ {enlace}\n"
-                mensaje_html += f"<li><a href='{enlace}'>{enlace}</a></li>"
-
-            mensaje_html += "</ul></li>"
-
-    mensaje_html += "</ul></body></html>"
-
-    # Si no hay enlaces nuevos, no enviamos nada
-    if not cambios_detectados:
-        print("⚠️ No se encontraron enlaces añadidos. No se enviará correo.")
-        return
-
-    # Adjuntar versiones en texto y HTML
-    msg.attach(MIMEText(mensaje_texto.strip(), "plain", "utf-8"))
-    msg.attach(MIMEText(mensaje_html, "html", "utf-8"))
+    msg.attach(MIMEText(mensaje, "plain", "utf-8"))
+    msg.attach(MIMEText(f"<html><body><pre>{mensaje}</pre></body></html>", "html", "utf-8"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
@@ -248,6 +200,8 @@ def enviar_email(detalles_cambios):
         print("📧 Correo enviado correctamente.")
     except Exception as e:
         print(f"❌ Error al enviar el correo: {e}")
+
+
 
 
 import difflib
@@ -329,7 +283,7 @@ def revisar_cambios():
         print("=" * 40)  # Separador para mayor claridad
 
     if cambios:
-        mensaje = "🔔 **Se han detectado cambios en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(detalles_cambios)
+        mensaje = "🔔 **Se han detectado novedades en las siguientes páginas:**\n\n" + "\n".join(cambios) + "\n\n" + "\n".join(novedades)
         enviar_email(mensaje)
     else:
         print("✅ No hay cambios en las páginas.")
