@@ -1,9 +1,6 @@
 import requests
 import os
 import difflib
-from monitor import obtener_links_importantes, cargar_estado
-
-
 
 # URL de la API de Viesgo (ajusta si es diferente)
 VIESGO_API_URL = "https://srv.areaprivada.viesgodistribucion.com/private/interactivemap/getNetHistory"
@@ -12,6 +9,7 @@ VIESGO_API_URL = "https://srv.areaprivada.viesgodistribucion.com/private/interac
 VIESGO_ESTADO_FILE = "Viesgo.txt"
 
 def obtener_pdfs_viesgo():
+    from monitor import obtener_html
     """Obtiene la lista de PDFs desde la API de Viesgo."""
     try:
         response = requests.get(VIESGO_API_URL, timeout=10)
@@ -60,10 +58,8 @@ def guardar_estado_viesgo(nombre, contenido):
 
 
 
-import difflib
-import os
-
 def detectar_cambios_viesgo():
+    from monitor import cargar_estado
     nombre = "Viesgo Distribución"
     
     # Cargar estado anterior
