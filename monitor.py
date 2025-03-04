@@ -56,10 +56,11 @@ def obtener_html(url, intentos=3, espera=5):
 
 
 def obtener_links_importantes(url, nombre):
-    """Obtiene los enlaces de archivos PDF, XLS y XLSX de una página web, excepto Viesgo."""
-    if nombre == "Viesgo Distribución":
-        return None  # Se manejará por la API
-        
+    """Obtiene los enlaces de archivos PDF, XLS y XLSX de una página web, excepto Viesgo y eredes."""
+    
+    if nombre in ["Viesgo Distribución", "E-Redes Distribución"]:
+        return None  # Se manejarán por su propio scraper
+
     html = obtener_html(url)
     if not html:
         print(f"⚠️ No se pudo obtener HTML de {url}")
@@ -85,26 +86,7 @@ def obtener_links_importantes(url, nombre):
         for link in archivos
     ]
 
-    # Si NO encontramos PDFs en la página normal y es Viesgo, usamos Selenium
-    if not archivos and nombre == "Viesgo Distribución":
-        print("⚠️ No se encontró PDF en HTML, intentando con Selenium...")
 
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")  # Modo sin interfaz gráfica
-        service = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=options)
-
-        # Cargar la página de Viesgo
-        driver.get(url)
-        time.sleep(5)  # Esperar a que cargue la web
-
-        # Obtener todos los enlaces de la web renderizada
-        selenium_links = [a.get_attribute("href") for a in driver.find_elements(By.TAG_NAME, "a")]
-
-        # Filtrar PDFs con Selenium
-        archivos = [link for link in selenium_links if link and "pdf" in link.lower()]
-
-        driver.quit()
 
     # Mostrar los archivos detectados
     if archivos:
@@ -185,10 +167,6 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 
 
-
-
-
-
 def enviar_email(mensaje):
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
@@ -209,7 +187,6 @@ def enviar_email(mensaje):
 
 
 
-import difflib
 
 def revisar_cambios():
     cambios = []
@@ -219,7 +196,6 @@ def revisar_cambios():
     # Primero, revisar Viesgo usando su API
     print("\n🔍 **Revisando Viesgo Distribución...**")
     cambios_viesgo, detalles_viesgo = viesgo_scraper.detectar_cambios_viesgo()
-
     if cambios_viesgo:
         cambios.extend(cambios_viesgo)  # 🔹 Agregar cambios de Viesgo a la lista general
         for enlace in cambios_viesgo:
@@ -227,14 +203,25 @@ def revisar_cambios():
     if detalles_viesgo:
         detalles_cambios.extend(detalles_viesgo)
 
+    
+    # Revisar E-Redes
+    print("\n🔍 **Revisando E-Redes...**")
+    cambios_eredes, detalles_eredes = eredes_scraper.detectar_cambios_eredes()
+    if cambios_eredes:
+        cambios.extend(cambios_eredes)
+        for enlace in cambios_eredes:
+            novedades_globales.append(("E-Redes Distribución", enlace))
+    if detalles_eredes:
+        detalles_cambios.extend(detalles_eredes)
+
 
 
 
     
     for nombre, url in URLS.items():
         
-        if nombre == "Viesgo Distribución":  # 🔹 Saltar Viesgo, ya se procesó antes
-            nuevo_contenido = viesgo_scraper.obtener_links_viesgo()
+        if nombre in ["Viesgo Distribución", "E-Redes Distribución"]:  # 🔹 Saltar Viesgo y eredes, ya se procesó antes
+            nuevo_contenido = viesgo_scraper.obtener_links_viesgo() if nombre == "Viesgo Distribución" else eredes_scraper.obtener_links_eredes()
         else:
             nuevo_contenido = obtener_links_importantes(url, nombre)
 
