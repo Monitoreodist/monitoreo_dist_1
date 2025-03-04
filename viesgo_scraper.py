@@ -105,7 +105,7 @@ def detectar_cambios_viesgo():
     if diferencias:
         print("\n🔍 **Diferencias detectadas:**")
         novedades = [line[1:] for line in diferencias if line.startswith("+")]
-        novedades = [enlace for enlace in novedades if enlace.startswith("http") or enlace.startswith("\")]
+        novedades = [enlace for enlace in novedades if enlace.startswith("http") or enlace.startswith("\\")]
         #eliminados = [line[1:] for line in diferencias if line.startswith("-")]
 
         if novedades:
