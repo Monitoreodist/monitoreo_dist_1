@@ -1,7 +1,6 @@
 import requests
 import os
 import difflib
-from monitor import obtener_links_importantes, cargar_estado
 
 
 # URL de la API de EREDES (ajusta si es diferente)
@@ -11,6 +10,7 @@ EREDES_API_URL = "https://srv.areaprivada.eredesdistribucion.es/private/interact
 EREDES_ESTADO_FILE = "E-Redes.txt"
 
 def obtener_pdfs_eredes():
+    from monitor import obtener_html 
     """Obtiene la lista de PDFs desde la API de E-Redes Distribución."""
     try:
         response = requests.get(EREDES_API_URL, timeout=10)
@@ -52,6 +52,7 @@ def guardar_estado_eredes(nombre, contenido):
         print(f"❌ Error al guardar el estado de {nombre}: {e}")
 
 def detectar_cambios_eredes():
+    from monitor import cargar_estado
     nombre = "E-Redes Distribución"
     
     viejo_contenido = cargar_estado(nombre)
