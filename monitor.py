@@ -79,8 +79,16 @@ def obtener_links_importantes(url, nombre):
 
     # Filtrar solo los enlaces que contienen archivos PDF, XLS o XLSX
     archivos = [link for link in todos_los_links if patron.search(link)]
+    
+    # Convertir rutas relativas a URLs completas (eDistribución e I-DE Iberdrola)
+    archivos = [
+        ("https://www.edistribucion.com" + link) if link.startswith("/content/dam/edistribucion") else
+        ("https://www.i-de.es" + link) if link.startswith("/documents/") else
+        link
+        for link in archivos
+    ]
 
-    # 🟢 Si NO encontramos PDFs en la página normal y es Viesgo, usamos Selenium
+    # Si NO encontramos PDFs en la página normal y es Viesgo, usamos Selenium
     if not archivos and nombre == "Viesgo Distribución":
         print("⚠️ No se encontró PDF en HTML, intentando con Selenium...")
 
