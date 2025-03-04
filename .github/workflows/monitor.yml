@@ -20,12 +20,8 @@ jobs:
 
       - name: Instalar dependencias
         run: |
-          pip install requests beautifulsoup4 selenium webdriver-manager
+          pip install requests beautifulsoup4 webdriver-manager
 
-      - name: Instalar Chrome y ChromeDriver
-        run: |
-          google-chrome --version
-          chromedriver --version
 
       - name: Ejecutar el script de monitoreo
         env:
