@@ -119,7 +119,7 @@ def detectar_cambios_viesgo():
         #        print(f"➖ {enlace}")
 
         cambios.append(f"- {nombre}: https://www.viesgodistribucion.com")
-        detalles_cambios.append("\n" + "\n".join(novedades) + "\n")
+        detalles_cambios.append("\n".join(novedades) + "\n")
     
 
 
