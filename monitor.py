@@ -216,6 +216,7 @@ def revisar_cambios():
     cambios_viesgo, detalles_viesgo = viesgo_scraper.detectar_cambios_viesgo()
 
     if cambios_viesgo:
+        print(cambios_viesgo)
         cambios.extend(cambios_viesgo)  # 🔹 Agregar cambios de Viesgo a la lista generalt
         for enlace in cambios_viesgo:
             novedades_globales.append(("Viesgo Distribución", enlace))
