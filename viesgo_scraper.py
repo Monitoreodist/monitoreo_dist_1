@@ -105,20 +105,21 @@ def detectar_cambios_viesgo():
     if diferencias:
         print("\n🔍 **Diferencias detectadas:**")
         novedades = [line[1:] for line in diferencias if line.startswith("+")]
-        eliminados = [line[1:] for line in diferencias if line.startswith("-")]
+        novedades = [enlace for enlace in novedades if enlace.startswith("http") or enlace.startswith("\")]
+        #eliminados = [line[1:] for line in diferencias if line.startswith("-")]
 
         if novedades:
             print(f"✅ **Nuevos enlaces encontrados ({len(novedades)}):**")
             for enlace in novedades:
                 print(f"➕ {enlace}")
 
-        if eliminados:
-            print(f"❌ **Enlaces eliminados ({len(eliminados)}):**")
-            for enlace in eliminados:
-                print(f"➖ {enlace}")
+        #if eliminados:
+        #    print(f"❌ **Enlaces eliminados ({len(eliminados)}):**")
+        #    for enlace in eliminados:
+        #        print(f"➖ {enlace}")
 
         cambios.append(f"- {nombre}: https://www.viesgodistribucion.com")
-        detalles_cambios.append(f"🔹 **{nombre}**:\n{diferencias}\n")
+        detalles_cambios.append(f"🔹 **{nombre}**:\n" + "\n".join(novedades) + "\n")
 
         # Guardar nuevo estado
         guardar_estado_viesgo(nombre, nuevo_contenido)
