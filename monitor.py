@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import smtplib
 import os
 import time
 import difflib
@@ -9,9 +8,6 @@ from email.mime.multipart import MIMEMultipart
 import viesgo_scraper
 import eredes_scraper
 import re
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
 
@@ -30,7 +26,7 @@ EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 
 
 # Función para obtener el contenido HTML de una web con reintentos
-def obtener_html(url, intentos=3, espera=5):
+def obtener_html(url, intentos=3, espera=2):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
         "Referer": "https://www.google.com/",
@@ -44,7 +40,7 @@ def obtener_html(url, intentos=3, espera=5):
 
     for intento in range(intentos):
         try:
-            response = session.get(url, timeout=15)
+            response = session.get(url, timeout=10)
             if response.status_code == 200:
                 return response.text
             print(f"⚠️ Intento {intento + 1} fallido para {url} (Código {response.status_code})")
@@ -125,9 +121,6 @@ def guardar_estado(nombre, contenido):
         os.system(f'git commit -m "Actualización de {nombre}" || echo "⚠️ No hay cambios para commitear."')
         os.system("git push || echo '⚠️ No se pudo hacer push a GitHub'")
 
-
-
-
     except Exception as e:
         print(f"❌ Error al guardar el estado de {nombre}: {e}")
 
@@ -168,6 +161,7 @@ def obtener_diferencias(viejo_contenido, nuevo_contenido):
 
 
 def enviar_email(mensaje):
+    import smtplib
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
     msg["To"] = EMAIL_RECEIVER
