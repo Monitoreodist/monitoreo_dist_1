@@ -7,13 +7,20 @@ import difflib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import viesgo_scraper
+import eredes_scraper
+import re
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+
+
 
 # Lista de URLs a monitorear
 URLS = {
     "E-Distribución": "https://www.edistribucion.com/es/red-electrica/Nodos_capacidad_acceso.html",
     "I-DE Iberdrola": "https://www.i-de.es/conexion-red-electrica/produccion-energia/mapa-capacidad-acceso",
     "UFD Unión Fenosa": "https://www.ufd.es/capacidad-de-acceso-de-generacion/",
-    "E-Redes Distribución": "https://areaprivada.eredesdistribucion.es/blank/interactive-map"  # Nueva URL
 }
 
 # Credenciales para el envío de correos (se configuran en GitHub)
@@ -47,16 +54,6 @@ def obtener_html(url, intentos=3, espera=5):
     return None
 
 
-import re
-
-import requests
-from bs4 import BeautifulSoup
-import re
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-import time
 
 def obtener_links_importantes(url, nombre):
     """Obtiene los enlaces de archivos PDF, XLS y XLSX de una página web, excepto Viesgo."""
