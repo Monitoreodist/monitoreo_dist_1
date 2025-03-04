@@ -13,19 +13,14 @@ jobs:
       - name: Clonar el repositorio
         uses: actions/checkout@v3
 
-      - name: Configurar Python
+      - name: Configurar Python y caché
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'  # O la versión que uses
+          python-version: '3.9'
+          cache: 'pip'  # Habilita caché de pip automáticamente
 
       - name: Instalar dependencias
-        run: |
-          pip install requests beautifulsoup4 selenium webdriver-manager
-
-      - name: Instalar Chrome y ChromeDriver
-        run: |
-          google-chrome --version
-          chromedriver --version
+        run: pip install -r requirements.txt
 
       - name: Ejecutar el script de monitoreo
         env:
