@@ -119,9 +119,9 @@ def detectar_cambios_viesgo():
         #        print(f"➖ {enlace}")
 
         cambios.append(f"- {nombre}: https://www.viesgodistribucion.com")
-        detalles_cambios.append(f"🔹 **{nombre}**:\n" + "\n".join(novedades) + "\n")
-        print(cambios)
-        print(detalles_cambios)
+        detalles_cambios.append("\n" + "\n".join(novedades) + "\n")
+    
+
 
         # Guardar nuevo estado
         guardar_estado_viesgo(nombre, nuevo_contenido)
@@ -131,7 +131,7 @@ def detectar_cambios_viesgo():
 
     print("=" * 40)
 
-    return cambios, detalles_cambios
+    return detalles_cambios, cambios
 
     
 
