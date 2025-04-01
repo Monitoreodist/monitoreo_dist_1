@@ -1,4 +1,3 @@
-https://www.ufd.es/wp-content/themes/ufd/download.php?pdf_url=https://www.ufd.es/wp-content/uploads/2025/02/Publicacion-capacidades-27-Enero.pdf
 https://www.ufd.es/wp-content/uploads/2022/02/04_Publicacion-capacidad_oct21.pdf
 https://www.ufd.es/wp-content/uploads/2022/02/05_Publicacion-capacidad_nov21.pdf
 https://www.ufd.es/wp-content/uploads/2022/02/06_Publicacion-capacidad_dic21.pdf
@@ -41,4 +40,6 @@ https://www.ufd.es/wp-content/uploads/2024/11/Publicacion-capacidades-Noviembre-
 https://www.ufd.es/wp-content/uploads/2024/12/Publicacion-capacidades-17-Diciembre-1.pdf
 https://www.ufd.es/wp-content/uploads/2024/12/Publicacion-capacidades-Diciembre-1.pdf
 https://www.ufd.es/wp-content/uploads/2025/02/Publicacion-capacidades-25-Febrero.pdf
-https://www.ufd.es/wp-content/uploads/2025/02/Publicacion-capacidades-25-Febrero.xlsx
+https://www.ufd.es/wp-content/uploads/2025/02/Publicacion-capacidades-27-Enero.pdf
+https://www.ufd.es/wp-content/uploads/2025/04/Publicacion-capacidades-25-Marzo.pdf
+https://www.ufd.es/wp-content/uploads/2025/04/Publicacion-capacidades-25-Marzo.xlsx
