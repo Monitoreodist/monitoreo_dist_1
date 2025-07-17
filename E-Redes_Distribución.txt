@@ -26,3 +26,4 @@ https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resour
 https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Feredes%2Finformacion-de-capacidad-de-acceso-20250423.pdf?generation=1745402127856819&alt=media
 https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Feredes%2Finformacion-de-capacidad-de-acceso-20250521.pdf?generation=1747818294978359&alt=media
 https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Feredes%2Finformacion-de-capacidad-de-acceso-20250617.pdf?generation=1750154386706522&alt=media
+https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Feredes%2Finformacion-de-capacidad-de-acceso-20250717.pdf?generation=1752752718102251&alt=media
