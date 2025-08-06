@@ -22,3 +22,4 @@ https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resour
 https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Fviesgo%2Finformacion-de-capacidad-de-acceso-20250502.pdf?generation=1746162335294351&alt=media
 https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Fviesgo%2Finformacion-de-capacidad-de-acceso-20250624.pdf?generation=1750760194415055&alt=media
 https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Fviesgo%2Finformacion-de-capacidad-de-acceso-20250701.pdf?generation=1751351542158828&alt=media
+https://content-storage.googleapis.com/download/storage/v1/b/apdes-static-resources/o/network-capacity-map%2Fviesgo%2Finformacion-de-capacidad-de-acceso-20250806.pdf?generation=1754458876733884&alt=media
